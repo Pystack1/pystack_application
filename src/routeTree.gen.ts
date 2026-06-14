@@ -15,6 +15,7 @@ import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
 import { Route as UserProfileRouteImport } from './routes/user.profile'
+import { Route as UserHelpdeskRouteImport } from './routes/user.helpdesk'
 import { Route as UserDashboardRouteImport } from './routes/user.dashboard'
 import { Route as AdminEnquiriesRouteImport } from './routes/admin.enquiries'
 import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
@@ -54,6 +55,11 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
 const UserProfileRoute = UserProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => UserRoute,
+} as any)
+const UserHelpdeskRoute = UserHelpdeskRouteImport.update({
+  id: '/helpdesk',
+  path: '/helpdesk',
   getParentRoute: () => UserRoute,
 } as any)
 const UserDashboardRoute = UserDashboardRouteImport.update({
@@ -127,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/user/dashboard': typeof UserDashboardRoute
+  '/user/helpdesk': typeof UserHelpdeskRoute
   '/user/profile': typeof UserProfileRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -143,6 +150,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/user/dashboard': typeof UserDashboardRoute
+  '/user/helpdesk': typeof UserHelpdeskRoute
   '/user/profile': typeof UserProfileRoute
   '/': typeof PublicIndexRoute
   '/admin': typeof AdminIndexRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/user/dashboard': typeof UserDashboardRoute
+  '/user/helpdesk': typeof UserHelpdeskRoute
   '/user/profile': typeof UserProfileRoute
   '/_public/': typeof PublicIndexRoute
   '/admin/': typeof AdminIndexRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/enquiries'
     | '/user/dashboard'
+    | '/user/helpdesk'
     | '/user/profile'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/enquiries'
     | '/user/dashboard'
+    | '/user/helpdesk'
     | '/user/profile'
     | '/'
     | '/admin'
@@ -219,6 +230,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/enquiries'
     | '/user/dashboard'
+    | '/user/helpdesk'
     | '/user/profile'
     | '/_public/'
     | '/admin/'
@@ -272,6 +284,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/user/profile'
       preLoaderRoute: typeof UserProfileRouteImport
+      parentRoute: typeof UserRoute
+    }
+    '/user/helpdesk': {
+      id: '/user/helpdesk'
+      path: '/helpdesk'
+      fullPath: '/user/helpdesk'
+      preLoaderRoute: typeof UserHelpdeskRouteImport
       parentRoute: typeof UserRoute
     }
     '/user/dashboard': {
@@ -397,11 +416,13 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface UserRouteChildren {
   UserDashboardRoute: typeof UserDashboardRoute
+  UserHelpdeskRoute: typeof UserHelpdeskRoute
   UserProfileRoute: typeof UserProfileRoute
 }
 
 const UserRouteChildren: UserRouteChildren = {
   UserDashboardRoute: UserDashboardRoute,
+  UserHelpdeskRoute: UserHelpdeskRoute,
   UserProfileRoute: UserProfileRoute,
 }
 

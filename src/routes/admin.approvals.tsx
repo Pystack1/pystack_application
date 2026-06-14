@@ -117,14 +117,7 @@ function ApprovalsPage() {
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage user access and roles</p>
         </div>
         
-        {isSuperAdmin && (
-          <button
-            onClick={() => navigate({ to: "/admin/create-admin" })}
-            className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm font-medium transition-all shadow-md hover:shadow-lg active:scale-95"
-          >
-            <FaUserPlus /> Create Admin
-          </button>
-        )}
+       
       </div>
 
       {/* Search Bar */}

@@ -5,6 +5,8 @@ import {
   FaEnvelope, 
   FaUser, 
   FaSignOutAlt,
+  FaHeadset,
+  FaLock,
   FaChalkboardTeacher 
 } from "react-icons/fa";
 import { useAuthStore } from "@/store/authStore";
@@ -14,8 +16,9 @@ const menuItems = [
   { to: "/user/dashboard", label: "Dashboard", icon: FaHome },
   { to: "/user/profile", label: "My Profile", icon: FaUser },
   { to: "/user/courses", label: "My Courses", icon: FaBook },
-  { to: "/user/enquiries", label: "My Enquiries", icon: FaEnvelope },
   { to: "/user/assignments", label: "Assignments", icon: FaChalkboardTeacher },
+   { to: "/user/helpdesk", label: "Support/Help Desk", icon: FaHeadset},
+   { to: "/user/changepassword", label: "Change Password", icon: FaLock },
 ];
 
 interface UserSidebarProps {

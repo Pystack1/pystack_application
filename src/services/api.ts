@@ -53,7 +53,11 @@ async function request<T>(path: string, options: Options = {}): Promise<T> {
 
   let res = await makeRequest();
 
-  if (res.status === 401) {
+  // CRITICAL FIX: Don't auto-refresh on 401 for login/register endpoints
+  // These are public endpoints that return 401 for wrong credentials
+  const isPublicAuthEndpoint = path.includes("/auth/login") || path.includes("/auth/register");
+
+  if (res.status === 401 && !isPublicAuthEndpoint) {
     const refreshed = await refreshAccessToken();
     if (!refreshed) {
       window.location.href = "/login";
@@ -65,20 +69,27 @@ async function request<T>(path: string, options: Options = {}): Promise<T> {
   }
 
   if (!res.ok) {
-    const msg = await res.text();
-    throw new Error(msg || res.statusText);
+    // FIX: Parse JSON error to get the actual detail message
+    let errorData: any = {};
+    try {
+      errorData = await res.json();
+    } catch {
+      errorData = { detail: res.statusText };
+    }
+
+    // Create error with the actual backend message
+    const error = new Error(errorData.detail || errorData.message || res.statusText);
+    // Attach full response data for catch blocks
+    (error as any).response = { data: errorData, status: res.status };
+    throw error;
   }
 
   return res.json();
 }
 
-// NEW: Dedicated upload function for FormData
 async function upload<T>(path: string, formData: FormData): Promise<T> {
   const url = new URL(path, BASE_URL);
   let token = useAuthStore.getState().accessToken;
-
-  // DEBUG: Log token to verify it's not null
-  console.log("Upload token:", token ? "present" : "MISSING");
 
   const makeRequest = () =>
     fetch(url.toString(), {
@@ -86,14 +97,12 @@ async function upload<T>(path: string, formData: FormData): Promise<T> {
       body: formData,
       headers: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        // NO Content-Type — browser sets multipart boundary automatically
       },
     });
 
   let res = await makeRequest();
 
   if (res.status === 401) {
-    console.log("Upload 401, attempting refresh...");
     const refreshed = await refreshAccessToken();
     if (!refreshed) {
       window.location.href = "/login";
@@ -101,7 +110,6 @@ async function upload<T>(path: string, formData: FormData): Promise<T> {
     }
 
     token = useAuthStore.getState().accessToken;
-    console.log("Upload token after refresh:", token ? "present" : "MISSING");
     res = await makeRequest();
   }
 
@@ -126,6 +134,5 @@ export const api = {
   delete: <T>(path: string, options?: Options) => 
     request<T>(path, { ...options, method: "DELETE" }),
   
-  // Use this for file uploads
   upload: <T>(path: string, formData: FormData) => upload<T>(path, formData),
 };

@@ -13,6 +13,7 @@ interface User {
   email: string;
   full_name?: string;
   roles: string[];
+  is_active?: boolean;
 }
 
 interface AuthState {
@@ -20,10 +21,9 @@ interface AuthState {
   user: User | null;
   accessToken: string | null;
   refreshToken: string | null;
-  
 
   login: (email: string, password: string) => Promise<{ ok: boolean; error?: string }>;
-  register: (email: string, password: string) => Promise<{ ok: boolean; error?: string }>;
+  register: (email: string, password: string, full_name: string) => Promise<{ ok: boolean; error?: string }>;
   logout: () => void;
   setTokens: (accessToken: string, refreshToken: string, user: User) => void;
 }
@@ -38,19 +38,13 @@ export const useAuthStore = create<AuthState>()(
 
       login: async (email, password) => {
         try {
-          // 1. Call Login API
-          const loginData: LoginResponse = await api.post("/auth/login", { email, password });
+          // api returns parsed JSON directly (no .data needed)
+          const loginData = await api.post<LoginResponse>("/auth/login", { email, password });
 
-          // 2. Fetch User Info manually using the new token
-          // Using raw fetch to avoid potential circular dependency issues with the api service during login
-          const userResponse = await fetch("http://localhost:8000/auth/me", {
+          const userData = await api.get<User>("/auth/me", {
             headers: { Authorization: `Bearer ${loginData.access_token}` }
           });
 
-          if (!userResponse.ok) throw new Error("Failed to fetch user profile");
-          const userData: User = await userResponse.json();
-
-          // 3. Update State
           set({
             isAuthenticated: true,
             accessToken: loginData.access_token,
@@ -60,17 +54,17 @@ export const useAuthStore = create<AuthState>()(
 
           return { ok: true };
         } catch (err: any) {
-          console.error("Login error object:", err);
-          
+          console.error("Login error:", err);
+
+          // FIX: Extract error from err.message (which now contains the actual backend detail)
+          // or from err.response.data as fallback
           let errorMessage = "Login failed. Please try again.";
 
-          // FIX: Check for the specific FastAPI detail message first
-          // Axios wraps the response in err.response
           if (err?.response?.data?.detail) {
             errorMessage = err.response.data.detail;
-          } 
-          // Fallback if the error structure is different
-          else if (err?.message) {
+          } else if (err?.response?.data?.message) {
+            errorMessage = err.response.data.message;
+          } else if (err?.message) {
             errorMessage = err.message;
           }
 
@@ -81,14 +75,14 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      register: async (email, password) => {
+      register: async (email, password, full_name) => {
         try {
-          await api.post("/auth/register", { email, password });
+          await api.post("/auth/register", { email, password, full_name });
           return { ok: true };
         } catch (err: any) {
           return {
             ok: false,
-            error: err.response?.data?.detail || "Registration failed",
+            error: err.response?.data?.detail || err.response?.data?.message || err.message || "Registration failed",
           };
         }
       },
