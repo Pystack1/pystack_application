@@ -1,5 +1,8 @@
 from datetime import datetime, timedelta
 from typing import Optional
+import os
+from dotenv import load_dotenv
+
 from fastapi import Depends, HTTPException, Security
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
@@ -10,10 +13,14 @@ from sqlalchemy.orm import joinedload   # ← ADD THIS LINE
 from backend.database import get_db
 from backend.models.user import User
 
-SECRET_KEY = "CHANGE_THIS_TO_A_VERY_SECURE_SECRET_KEY_2026"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24   # 24 hours
-REFRESH_TOKEN_EXPIRE_DAYS = 7
+# Load environment variables from .env file (backend/.env)
+load_dotenv()
+
+# --- JWT Configuration from .env ---
+SECRET_KEY = os.getenv("SECRET_KEY", "SECRET_KEY=8f9c4d2a7b1e5f6c9a3d8e1f7b4c2a9d6e5f1a8c3b7d9e2f4a6c8b1d5e7f9a2")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", str(60 * 24)))   # 24 hours default
+REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7"))
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 auth_scheme = HTTPBearer()

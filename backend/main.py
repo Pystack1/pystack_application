@@ -1,17 +1,29 @@
+# backend/main.py
 import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
-from fastapi.staticfiles import StaticFiles # <--- ADD THIS IMPORT
+from fastapi.staticfiles import StaticFiles
 
-# Import Routers ONLY
-from backend.routers import auth, courses, enquiries, dashboard, review ,user_profile
+# Import Routers
+from backend.routers import auth, courses, enquiries, dashboard, review, user_profile
+
+# --- RATE LIMITING IMPORTS ---
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from backend.core.rate_limiter import limiter
+from slowapi import _rate_limit_exceeded_handler
 
 app = FastAPI(title="Pystack Backend")
+
+# --- RATE LIMITING SETUP ---
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
 
 # CORS Middleware
 app.add_middleware(
@@ -22,7 +34,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Create tables on startup (Simple version)
+# Create tables on startup
 from backend.database import create_db_and_tables
 
 @app.on_event("startup")
@@ -35,12 +47,9 @@ app.include_router(courses.router, prefix="/courses", tags=["courses"])
 app.include_router(enquiries.router, prefix="/enquiries", tags=["enquiries"])
 app.include_router(dashboard.router, prefix="/dashboard", tags=["dashboard"])
 app.include_router(review.router, prefix="/reviews", tags=["reviews"])
-
-# user
 app.include_router(user_profile.router, prefix="/user", tags=["profile"])
 
-# --- ADD THIS LINE AT THE BOTTOM ---
-# This tells FastAPI: "If someone asks for /static/..., look in the 'backend/static' folder"
+# Static Files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 if __name__ == "__main__":

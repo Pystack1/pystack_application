@@ -158,6 +158,18 @@ function Login() {
                 </div>
               </div>
 
+              {/* Add this after password input, before submit button */}
+<div className="flex items-center justify-between">
+  <div></div>
+  <Link
+    to="/forgot-password"
+    className="text-sm text-primary hover:underline transition-colors"
+  >
+    Forgot Password?
+  </Link>
+</div>
+              
+
               <div className="space-y-3">
                 <button
                   type="submit"
