@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITLE}}</title>
+<base target="_blank">
+</head>
+<body style="margin:0; padding:0; background-color:#f0f4f8; font-family:'Segoe UI',Arial,sans-serif;">
+
+    <!-- Top Logo Bar -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0f172a;">
+        <tr>
+            <td align="center" style="padding:24px 20px;">
+                {{LOGO}}
+            </td>
+        </tr>
+    </table>
+
+    <!-- Main Content -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td align="center" style="padding:40px 20px;">
+                <table width="480" cellpadding="0" cellspacing="0" border="0" style="max-width:480px; width:100%;">
+
+                    <!-- Success Banner (conditional) -->
+                    <tr style="display:{{SHOW_SUCCESS}};">
+                        <td style="padding-bottom:20px;">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#dcfce7; border:1px solid #86efac; border-radius:12px;">
+                                <tr>
+                                    <td align="center" style="padding:20px;">
+                                        <p style="color:#166534; font-size:28px; margin:0 0 8px;">🎉</p>
+                                        <p style="color:#166534; font-size:16px; font-weight:700; margin:0 0 4px; font-family:'Segoe UI',Arial,sans-serif;">{{SUCCESS_TITLE}}</p>
+                                        <p style="color:#15803d; font-size:13px; margin:0; font-family:'Segoe UI',Arial,sans-serif;">{{SUCCESS_MSG}}</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Greeting -->
+                    <tr>
+                        <td style="padding-bottom:8px;">
+                            <h1 style="color:#0f172a; font-size:28px; font-weight:700; margin:0; font-family:'Segoe UI',Arial,sans-serif;">
+                                {{HEADING}}
+                            </h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-bottom:24px;">
+                            <p style="color:#64748b; font-size:15px; margin:0; font-family:'Segoe UI',Arial,sans-serif;">
+                                {{SUB_HEADING}}
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Message -->
+                    <tr>
+                        <td style="padding-bottom:28px;">
+                            <p style="color:#475569; font-size:15px; line-height:1.7; margin:0; font-family:'Segoe UI',Arial,sans-serif;">
+                                {{MESSAGE}}
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- OTP Box (conditional) -->
+                    <tr style="display:{{SHOW_OTP}};">
+                        <td style="padding-bottom:28px;">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" 
+                                   style="background-color:#ffffff; border:2px solid #e2e8f0; border-radius:16px;">
+                                <tr>
+                                    <td align="center" style="padding:32px 24px;">
+                                        <p style="color:#94a3b8; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:3px; margin:0 0 16px; font-family:'Segoe UI',Arial,sans-serif;">
+                                            Your Verification Code
+                                        </p>
+                                        <p style="color:#0f172a; font-size:44px; font-weight:800; letter-spacing:10px; margin:0; font-family:'Courier New',monospace;">
+                                            {{OTP}}
+                                        </p>
+                                        <table cellpadding="0" cellspacing="0" border="0" style="margin-top:20px;">
+                                            <tr>
+                                                <td style="background-color:#fef3c7; border:1px solid #fbbf24; border-radius:50px; padding:10px 20px;">
+                                                    <p style="color:#b45309; font-size:13px; font-weight:500; margin:0; font-family:'Segoe UI',Arial,sans-serif;">
+                                                        ⏱️ {{TIMER_TEXT}}
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Security / Info Notice -->
+                    <tr>
+                        <td style="padding-bottom:28px;">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" 
+                                   style="background-color:#f8fafc; border:1px solid #e2e8f0; border-radius:12px;">
+                                <tr>
+                                    <td style="padding:20px 24px;">
+                                        <table cellpadding="0" cellspacing="0" border="0">
+                                            <tr>
+                                                <td style="padding-right:12px; vertical-align:top;">
+                                                    <span style="font-size:22px;">🔒</span>
+                                                </td>
+                                                <td>
+                                                    <p style="color:#0f172a; font-size:14px; font-weight:600; margin:0 0 4px; font-family:'Segoe UI',Arial,sans-serif;">
+                                                        {{SECURITY_TITLE}}
+                                                    </p>
+                                                    <p style="color:#64748b; font-size:13px; line-height:1.6; margin:0; font-family:'Segoe UI',Arial,sans-serif;">
+                                                        {{SECURITY_MSG}}
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Footer -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#e2e8f0;">
+        <tr>
+            <td align="center" style="padding:28px 20px;">
+                <p style="color:#475569; font-size:13px; margin:0 0 4px; font-family:'Segoe UI',Arial,sans-serif;">
+                    © 2026 <strong style="color:#0f172a;">{{FROM_NAME}}</strong>. All rights reserved.
+                </p>
+                <p style="color:#94a3b8; font-size:12px; margin:0; font-family:'Segoe UI',Arial,sans-serif;">
+                    This is an automated email, please do not reply.
+                </p>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>
